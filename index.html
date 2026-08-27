@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#07090d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Drehzeug Budget</title>
+  <style>
+    :root{--bg:#07090d;--card:#11151c;--card2:#0d1117;--text:#f5f7fb;--muted:#8e98a8;--blue:#2f81f7;--blue2:#58a6ff;--red:#ff5a6f;--green:#37d67a;--line:#212936;--shadow:0 14px 34px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#07090d 0%,#0a0d12 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+    .app{max-width:620px;margin:0 auto;padding:env(safe-area-inset-top) 16px calc(28px + env(safe-area-inset-bottom))}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 10px}.title-wrap h1{margin:0;font-size:29px;letter-spacing:-.7px}.title-wrap p{margin:4px 0 0;color:var(--muted);font-size:14px}
+    .icon-btn{border:1px solid var(--line);background:var(--card);color:var(--text);width:42px;height:42px;border-radius:14px;font-size:20px;box-shadow:var(--shadow)}
+    .period{display:grid;grid-template-columns:1fr .72fr;gap:10px;margin:8px 0 12px}.period select{font-weight:800;background:#0d131b}
+    .hero{background:linear-gradient(145deg,#101722 0%,#0e131b 100%);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow)}
+    .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.hero h2{font-size:15px;color:var(--muted);font-weight:600;margin:0 0 7px}.budget{font-size:34px;font-weight:800;letter-spacing:-1px}.month{font-size:14px;color:var(--blue2);font-weight:700;margin-top:2px}.edit-budget{border:0;background:#15243a;color:#8bc1ff;border-radius:12px;padding:10px 12px;font-weight:700}
+    .progress{height:11px;background:#1c2330;border-radius:999px;margin:18px 0 16px;overflow:hidden}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:999px;transition:.25s}
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:12px}.stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}.stat strong{font-size:17px}.red{color:var(--red)}.green{color:var(--green)}
+    .week-card{margin-top:12px;background:#101923;border:1px solid #23364b;border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.week-card .label{color:var(--muted);font-size:12px}.week-card .dates{font-size:11px;color:#6f7b8c;margin-top:4px}.week-card strong{font-size:20px}
+    .projection{margin-top:10px;background:#0d1723;border:1px solid #1b3b61;border-radius:16px;padding:13px;display:flex;justify-content:space-between;gap:8px;align-items:center}.projection span{color:#93a3b7;font-size:12px}.projection strong{color:#8bc1ff;font-size:17px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin:24px 2px 12px}.section-head h3{font-size:20px;margin:0}.add{width:42px;height:42px;border:0;border-radius:14px;background:var(--blue);color:white;font-size:27px;line-height:1;box-shadow:0 10px 25px rgba(47,129,247,.25)}
+    .category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}.cat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center;font-size:11px;color:#aab3c2}.cat b{display:block;font-size:18px;margin-bottom:5px;color:white}
+    .list{display:flex;flex-direction:column;gap:10px}.empty{padding:28px 18px;text-align:center;color:var(--muted);background:var(--card);border:1px dashed #2a3342;border-radius:18px}.item{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:13px 14px}.left{min-width:0}.name{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:4px}.amount{font-weight:800;color:var(--red);white-space:nowrap}.delete{background:none;border:0;color:#718096;font-size:18px;padding:5px}
+    .sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-end;z-index:20}.sheet-backdrop.show{display:flex}.sheet{width:100%;max-width:620px;margin:0 auto;background:#0d1117;border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -20px 50px rgba(0,0,0,.5)}
+    .handle{width:48px;height:5px;background:#303846;border-radius:999px;margin:0 auto 16px}.sheet h3{margin:0 0 16px;font-size:21px}.form{display:grid;gap:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{font-size:12px;color:var(--muted);display:block;margin:0 0 6px 2px}input,select{width:100%;background:#080b10;border:1px solid #273140;color:white;padding:13px 12px;border-radius:14px;font-size:16px;outline:none}input:focus,select:focus{border-color:var(--blue)}
+    .actions{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:5px}.secondary,.primary{border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:800}.secondary{background:#1a202a;color:white}.primary{background:var(--blue);color:white}.small-note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.45}
+    @media(max-width:430px){.budget{font-size:30px}.category-grid{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header><div class="title-wrap"><h1>Drehzeug Budget</h1><p>Monatliche Ausgaben im Blick</p></div><button class="icon-btn" id="settingsBtn" aria-label="Einstellungen">⚙︎</button></header>
+
+  <div class="period"><select id="monthSelect" aria-label="Monat auswählen"></select><select id="yearSelect" aria-label="Jahr auswählen"></select></div>
+
+  <section class="hero">
+    <div class="hero-top"><div><h2>Monatsbudget</h2><div class="budget" id="budgetValue">0,00 €</div><div class="month" id="monthLabel"></div></div><button class="edit-budget" id="budgetBtn">Ändern</button></div>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="stats">
+      <div class="stat"><span>Ausgegeben</span><strong class="red" id="spentValue">0,00 €</strong></div>
+      <div class="stat"><span>Noch verfügbar</span><strong class="green" id="remainingValue">0,00 €</strong></div>
+      <div class="stat"><span>Käufe</span><strong id="countValue">0</strong></div>
+      <div class="stat"><span>Gesamtmenge</span><strong id="qtyValue">0</strong></div>
+    </div>
+    <div class="week-card"><div><div class="label">Aktuelle Woche</div><div class="dates" id="weekDates"></div></div><strong class="red" id="weekValue">0,00 €</strong></div>
+    <div class="projection"><span id="projectionLabel">Prognose bis Monatsende</span><strong id="projectionValue">0,00 €</strong></div>
+  </section>
+
+  <div class="section-head"><h3>Kategorien</h3></div><div class="category-grid" id="categoryGrid"></div>
+  <div class="section-head"><h3>Käufe im Monat</h3><button class="add" id="addBtn" aria-label="Neuer Kauf">+</button></div><div class="list" id="purchaseList"></div>
+</main>
+
+<div class="sheet-backdrop" id="purchaseSheet"><section class="sheet"><div class="handle"></div><h3>Neuer Kauf</h3><div class="form">
+  <div class="row"><div><label>Kategorie</label><select id="pCategory"><option>Tabak</option><option>Blättchen</option><option>Filter</option><option>Drehzeug komplett</option><option>Sonstiges</option></select></div><div><label>Preis</label><input id="pPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div></div>
+  <div class="row"><div><label>Menge</label><input id="pQty" type="number" min="1" step="1" value="1"></div><div><label>Datum</label><input id="pDate" type="date"></div></div>
+  <div class="actions"><button class="secondary" id="cancelPurchase">Abbrechen</button><button class="primary" id="savePurchase">Speichern</button></div>
+</div></section></div>
+
+<div class="sheet-backdrop" id="budgetSheet"><section class="sheet"><div class="handle"></div><h3>Monatsbudget ändern</h3><div class="form"><div><label>Budget in Euro</label><input id="budgetInput" type="number" min="0" step="1" inputmode="decimal"></div><div class="actions"><button class="secondary" id="cancelBudget">Abbrechen</button><button class="primary" id="saveBudget">Speichern</button></div></div></section></div>
+
+<div class="sheet-backdrop" id="settingsSheet"><section class="sheet"><div class="handle"></div><h3>Einstellungen</h3><div class="form"><button class="secondary" id="exportBtn">Daten exportieren</button><button class="secondary" id="resetBtn" style="color:#ff7586">Alle Daten zurücksetzen</button><button class="primary" id="closeSettings">Fertig</button></div><div class="small-note">Alle Daten werden lokal auf diesem Gerät gespeichert.</div></section></div>
+
+<script>
+const KEY='drehzeugBudgetApp_v1';
+const cats=['Tabak','Blättchen','Filter','Drehzeug komplett','Sonstiges'];
+const icons={Tabak:'◫',Blättchen:'▱',Filter:'○','Drehzeug komplett':'◎',Sonstiges:'•••'};
+let data=load();
+const now=new Date(); let viewMonth=now.getMonth(); let viewYear=now.getFullYear();
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d){d.purchases=(d.purchases||[]).filter(p=>p.category!=='Feuerzeug');return d}}catch{}return {budget:100,purchases:[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function eur(n){return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(Number(n)||0)}
+function pad(n){return String(n).padStart(2,'0')}
+function selectedKey(){return `${viewYear}-${pad(viewMonth+1)}`}
+function selectedPurchases(){return data.purchases.filter(p=>String(p.date).slice(0,7)===selectedKey())}
+function monthName(){return new Intl.DateTimeFormat('de-DE',{month:'long',year:'numeric'}).format(new Date(viewYear,viewMonth,1))}
+function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
+function isCurrentMonth(){return viewYear===now.getFullYear()&&viewMonth===now.getMonth()}
+function weekRange(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);const day=(x.getDay()+6)%7;const start=new Date(x);start.setDate(x.getDate()-day);const end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);return {start,end}}
+function currentWeekPurchases(){const {start,end}=weekRange();return data.purchases.filter(p=>{const d=new Date(p.date+'T12:00:00');return d>=start&&d<=end})}
+function formatShort(d){return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.`}
+function setupSelectors(){const names=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];monthSelect.innerHTML=names.map((n,i)=>`<option value="${i}">${n}</option>`).join('');const years=[];for(let y=now.getFullYear()+2;y>=now.getFullYear()-10;y--)years.push(y);yearSelect.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');monthSelect.value=viewMonth;yearSelect.value=viewYear}
+function render(){
+ const ps=selectedPurchases(),spent=ps.reduce((s,p)=>s+Number(p.price||0),0),remaining=data.budget-spent,qty=ps.reduce((s,p)=>s+Number(p.qty||1),0);
+ budgetValue.textContent=eur(data.budget);spentValue.textContent=eur(spent);remainingValue.textContent=eur(remaining);remainingValue.className=remaining<0?'red':'green';countValue.textContent=ps.length;qtyValue.textContent=qty;monthLabel.textContent=monthName();
+ progressBar.style.width=(data.budget>0?Math.min(spent/data.budget*100,100):0)+'%';
+ const wp=currentWeekPurchases(),weekSpent=wp.reduce((s,p)=>s+Number(p.price||0),0),wr=weekRange();weekValue.textContent=eur(weekSpent);weekDates.textContent=`${formatShort(wr.start)} – ${formatShort(wr.end)}`;
+ if(isCurrentMonth()){projectionLabel.textContent='Prognose bis Monatsende';projectionValue.textContent=eur(spent>0?(spent/Math.max(now.getDate(),1))*daysInMonth(viewYear,viewMonth):0)}else{projectionLabel.textContent='Gesamtausgaben im Monat';projectionValue.textContent=eur(spent)}
+ categoryGrid.innerHTML=cats.map(c=>{const v=ps.filter(p=>p.category===c).reduce((s,p)=>s+Number(p.price||0),0);return `<div class="cat"><b>${icons[c]}</b>${c}<div style="margin-top:5px;color:#fff;font-weight:800">${eur(v)}</div></div>`}).join('');
+ const sorted=[...ps].sort((a,b)=>new Date(b.date)-new Date(a.date));purchaseList.innerHTML=sorted.length?sorted.map(p=>`<div class="item"><div class="left"><div class="name">${p.category}</div><div class="meta">${formatDate(p.date)} · Menge ${p.qty||1}</div></div><div style="display:flex;align-items:center"><div class="amount">− ${eur(p.price)}</div><button class="delete" onclick="del('${p.id}')">×</button></div></div>`).join(''):'<div class="empty">Noch keine Käufe in diesem Monat.<br>Tippe auf <b>+</b>, um einen Kauf einzutragen.</div>';
+ monthSelect.value=viewMonth;yearSelect.value=viewYear;
+}
+function formatDate(s){const [y,m,d]=s.split('-');return `${d}.${m}.${y}`}
+function del(id){data.purchases=data.purchases.filter(p=>p.id!==id);save()}
+function openSheet(id){document.getElementById(id).classList.add('show')} function closeSheet(id){document.getElementById(id).classList.remove('show')}
+function todayISO(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+setupSelectors();monthSelect.onchange=()=>{viewMonth=Number(monthSelect.value);render()};yearSelect.onchange=()=>{viewYear=Number(yearSelect.value);render()};
+addBtn.onclick=()=>{pPrice.value='';pQty.value='1';pDate.value=isCurrentMonth()?todayISO():`${viewYear}-${pad(viewMonth+1)}-01`;openSheet('purchaseSheet')};cancelPurchase.onclick=()=>closeSheet('purchaseSheet');
+savePurchase.onclick=()=>{const category=pCategory.value,price=parseFloat(pPrice.value),qty=parseInt(pQty.value||'1'),date=pDate.value||todayISO();if(!price||price<0){alert('Bitte einen gültigen Preis eingeben.');return}if(!qty||qty<1){alert('Bitte eine gültige Menge eingeben.');return}data.purchases.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2),category,price,qty,date});save();closeSheet('purchaseSheet')};
+budgetBtn.onclick=()=>{budgetInput.value=data.budget;openSheet('budgetSheet')};cancelBudget.onclick=()=>closeSheet('budgetSheet');saveBudget.onclick=()=>{const v=parseFloat(budgetInput.value);if(isNaN(v)||v<0){alert('Bitte ein gültiges Budget eingeben.');return}data.budget=v;save();closeSheet('budgetSheet')};
+settingsBtn.onclick=()=>openSheet('settingsSheet');closeSettings.onclick=()=>closeSheet('settingsSheet');resetBtn.onclick=()=>{if(confirm('Wirklich alle gespeicherten Daten löschen?')){data={budget:100,purchases:[]};save();closeSheet('settingsSheet')}};
+exportBtn.onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='drehzeug-budget-daten.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+['purchaseSheet','budgetSheet','settingsSheet'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)closeSheet(id)}));render();
+</script>
+</body></html>
