@@ -1,0 +1,12 @@
+{
+  "globalEnabled": false,
+  "delaySeconds": 300,
+  "aiEnabled": true,
+  "aiModel": "gpt-5.6",
+  "historyMessages": 10,
+  "humanMode": "notify",
+  "enabledChats": {},
+  "chatStyles": {},
+  "history": [],
+  "alerts": []
+}
